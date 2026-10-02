@@ -1,0 +1,26 @@
+services:
+  lightflow:
+    build: .
+    container_name: lightflow
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - JWT_EXPIRES_IN=7d
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-change-me-32chars-long-key!!}
+      - DB_PATH=/app/data/lightflow.db
+      - BASE_URL=${BASE_URL:-http://localhost:4000}
+      - SEED_ADMIN_USERNAME=${SEED_ADMIN_USERNAME:-admin}
+      - SEED_ADMIN_PASSWORD=${SEED_ADMIN_PASSWORD:-admin123}
+      - EXECUTION_RETENTION_DAYS=${EXECUTION_RETENTION_DAYS:-30}
+      - WEBHOOK_RATE_LIMIT=${WEBHOOK_RATE_LIMIT:-60}
+      # - TRUST_PROXY=1 # aktifkan jika di balik reverse proxy (NPM/Traefik)
+    volumes:
+      - lightflow_data:/app/data
+
+volumes:
+  lightflow_data:
+    driver: local
